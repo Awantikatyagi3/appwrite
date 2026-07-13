@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "master", "main" ]
 
+env:
+  COMPOSE_FILE: docker-compose.yml:docker-compose.override.yml
+
 jobs:
   specmatic:
     runs-on: ubuntu-latest
