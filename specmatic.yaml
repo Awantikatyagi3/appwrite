@@ -1,0 +1,10 @@
+version: "3"
+sources:
+  - provider: file
+    repository: ../specs
+    provides:
+      - specs/latest/open-api3-latest-server.json
+environments:
+  ci:
+    baseurls:
+      - http://localhost:80

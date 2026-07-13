@@ -1,0 +1,44 @@
+name: "Contract Tests"
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  specmatic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Appwrite
+        uses: actions/checkout@v4
+        with:
+          path: appwrite
+
+      - name: Checkout Specs
+        uses: actions/checkout@v4
+        with:
+          repository: appwrite/specs
+          path: specs
+
+      - name: Start Appwrite
+        working-directory: ./appwrite
+        run: docker compose up -d
+
+      - name: Setup Environment and Authentication
+        working-directory: ./appwrite
+        run: bash tests/contract/setup_env.sh
+
+      - name: Validate External Examples
+        working-directory: ./appwrite
+        run: docker compose -f docker-compose.yml -f docker-compose.specmatic.yml run specmatic-validate
+
+      - name: Run Specmatic Contract Tests
+        working-directory: ./appwrite
+        run: docker compose -f docker-compose.yml -f docker-compose.specmatic.yml up specmatic --abort-on-container-exit
+
+      - name: Stop Containers
+        if: always()
+        working-directory: ./appwrite
+        run: docker compose down
+
