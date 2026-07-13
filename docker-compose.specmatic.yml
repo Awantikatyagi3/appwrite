@@ -11,6 +11,8 @@ services:
     command: test --host appwrite --port 80
     networks:
       - appwrite
+    environment:
+      - SPECMATIC_GENERATIVE_TESTS=true
 
   specmatic-validate:
     image: specmatic/specmatic:latest

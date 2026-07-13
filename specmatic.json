@@ -1,0 +1,11 @@
+{
+  "sources": [
+    {
+      "provider": "git",
+      "repository": "https://github.com/appwrite/specs.git",
+      "provides": [
+        "specs/latest/account.json"
+      ]
+    }
+  ]
+}

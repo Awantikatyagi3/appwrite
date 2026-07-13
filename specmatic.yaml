@@ -1,10 +1,10 @@
 version: "3"
-sources:
-  - provider: file
-    repository: ../specs
-    provides:
-      - specs/latest/open-api3-latest-server.json
-environments:
-  ci:
-    baseurls:
-      - http://localhost:80
+systemUnderTest:
+  service:
+    definitions:
+    - definition:
+        source:
+          git:
+            url: "https://github.com/appwrite/specs.git"
+        specs:
+        - "specs/latest/account.json"
