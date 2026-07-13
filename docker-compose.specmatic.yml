@@ -1,7 +1,6 @@
 services:
   specmatic:
     image: specmatic/specmatic:latest
-    container_name: appwrite-specmatic
     depends_on:
       appwrite:
         condition: service_healthy
@@ -15,11 +14,8 @@ services:
 
   specmatic-validate:
     image: specmatic/specmatic:latest
-    container_name: appwrite-specmatic-validate
     volumes:
       - .:/usr/src/app
       - ../specs:/usr/src/specs
     working_dir: /usr/src/app
     command: examples validate
-    networks:
-      - appwrite
