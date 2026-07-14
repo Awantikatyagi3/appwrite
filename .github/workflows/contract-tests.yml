@@ -35,7 +35,7 @@ jobs:
         working-directory: ./appwrite
         env:
           APPWRITE_MASTER_KEY: ${{ secrets.APPWRITE_MASTER_KEY }}
-        run: docker compose exec appwrite bash tests/contract/setup_env.sh
+        run: docker compose exec appwrite sh tests/contract/setup_env.sh
 
       - name: Validate External Examples
         working-directory: ./appwrite
