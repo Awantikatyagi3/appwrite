@@ -31,7 +31,7 @@ jobs:
           docker compose build
           docker compose up -d
 
-            - name: Setup Environment and Authentication
+      - name: Setup Environment and Authentication
         working-directory: ./appwrite
         env:
           APPWRITE_MASTER_KEY: ${{ secrets.APPWRITE_MASTER_KEY }}
