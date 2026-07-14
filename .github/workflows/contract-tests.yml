@@ -34,8 +34,9 @@ jobs:
       - name: Setup Environment and Authentication
         working-directory: ./appwrite
         env:
-          APPWRITE_PROJECT_ID: ${{ env.APPWRITE_PROJECT_ID }}
-          APPWRITE_API_KEY: ${{ env.APPWRITE_API_KEY }}
+          APPWRITE_MASTER_KEY: ${{ secrets.APPWRITE_MASTER_KEY }}
+          APPWRITE_MASTER_KEY: ${{ secrets.APPWRITE_MASTER_KEY }}
+          APPWRITE_MASTER_KEY: ${{ secrets.APPWRITE_MASTER_KEY }}
         run: bash tests/contract/setup_env.sh
 
       - name: Validate External Examples
