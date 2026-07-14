@@ -27,7 +27,7 @@ jobs:
       - name: Start Appwrite
         working-directory: ./appwrite
         run: |
-          sed -i 's|image: appwrite/vibes:.*|image: alpine:latest|g' docker-compose.yml
+          # sed -i 's|image: appwrite/vibes:.*|image: alpine:latest|g' docker-compose.yml  # Disabled to keep original appwrite/vibes image
           docker compose build
           docker compose up -d
 
