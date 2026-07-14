@@ -7,4 +7,5 @@ systemUnderTest:
           git:
             url: "https://github.com/appwrite/specs.git"
         specs:
-        - "specs/latest/account.json"
+          - "specs/latest/account.json"
+        dictionary: tests/contract/dictionary.json
