@@ -3,7 +3,7 @@ set -e
 
 # Wait for Appwrite to be ready
 echo "Waiting for Appwrite to be healthy..."
-until curl -fsS -o /dev/null "http://localhost/v1/health"; do
+until curl -fsS -H "Host: ${_APP_DOMAIN:-localhost}" -o /dev/null "http://localhost/v1/health"; do
   echo "Still waiting..."
   sleep 5
 done
