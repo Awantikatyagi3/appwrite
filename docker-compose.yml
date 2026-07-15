@@ -83,6 +83,7 @@ services:
       - _APP_WORKER_PER_CORE
       - _APP_POOL_ADAPTER
       - _APP_LOCALE
+      - APPWRITE_MASTER_KEY=${_APP_OPENSSL_KEY_V1}
       - _APP_COMPRESSION_ENABLED
       - _APP_COMPRESSION_MIN_SIZE_BYTES
       - _APP_CONSOLE_WHITELIST_ROOT
@@ -218,7 +219,7 @@ services:
         max-file: "5"
         max-size: 10m
     container_name: appwrite-console
-    image: appwrite/vibes:0.3.5
+    image: alpine:latest
     restart: unless-stopped
     networks:
       - appwrite
