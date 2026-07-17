@@ -43,7 +43,7 @@ final class SitesCustomServerTest extends Scope
         $buildSpecifications = $this->listSpecifications(['type' => 'builds']);
         $this->assertEquals(200, $buildSpecifications['headers']['status-code']);
         $this->assertEquals($specifications['body']['total'], $buildSpecifications['body']['total']);
-        $buildSpecification = $buildSpecifications['body']['specifications'][0]['slug'];
+        $buildSpecification = $this->getEnabledSpecification($buildSpecifications['body']['specifications']);
 
         $site = $this->createSite([
             'buildRuntime' => 'node-22',
@@ -86,7 +86,7 @@ final class SitesCustomServerTest extends Scope
     public function testCreateSite(): void
     {
         $buildSpecifications = $this->listSpecifications(['type' => 'builds']);
-        $buildSpecification = $buildSpecifications['body']['specifications'][0]['slug'];
+        $buildSpecification = $this->getEnabledSpecification($buildSpecifications['body']['specifications']);
 
         /**
          * Test for SUCCESS
@@ -134,6 +134,21 @@ final class SitesCustomServerTest extends Scope
         $this->assertEquals(201, $variable['headers']['status-code']);
         $this->assertEquals(201, $variable2['headers']['status-code']);
         $this->assertEquals(201, $variable3['headers']['status-code']);
+
+        /**
+         * Test for FAILURE
+         * Reject buildRuntime values outside _APP_SITES_RUNTIMES (static-1,node-22 in test env).
+         */
+        $site = $this->createSite([
+            'buildRuntime' => 'node-24',
+            'framework' => 'other',
+            'name' => 'Unsupported Runtime Site',
+            'siteId' => ID::unique(),
+        ]);
+
+        $this->assertEquals(400, $site['headers']['status-code']);
+        $this->assertEquals('general_argument_invalid', $site['body']['type']);
+        $this->assertStringContainsString('Runtime "node-24" is not supported', (string) $site['body']['message']);
 
         $this->cleanupSite($siteId);
     }
@@ -733,7 +748,7 @@ final class SitesCustomServerTest extends Scope
          */
         $siteId = $this->setupSite([
             'buildRuntime' => 'node-22',
-            'buildSpecification' => $buildSpecifications['body']['specifications'][0]['slug'],
+            'buildSpecification' => $this->getEnabledSpecification($buildSpecifications['body']['specifications']),
             'fallbackFile' => '',
             'framework' => 'analog',
             'name' => 'Test List Sites',
@@ -879,7 +894,7 @@ final class SitesCustomServerTest extends Scope
 
         $siteId = $this->setupSite([
             'buildRuntime' => 'node-22',
-            'buildSpecification' => $buildSpecifications['body']['specifications'][0]['slug'],
+            'buildSpecification' => $this->getEnabledSpecification($buildSpecifications['body']['specifications']),
             'fallbackFile' => '',
             'framework' => 'other',
             'name' => 'Test Site',
@@ -1667,7 +1682,7 @@ final class SitesCustomServerTest extends Scope
     public function testUpdateSpecs(): void
     {
         $buildSpecifications = $this->listSpecifications(['type' => 'builds']);
-        $buildSpecification = $buildSpecifications['body']['specifications'][0]['slug'];
+        $buildSpecification = $this->getEnabledSpecification($buildSpecifications['body']['specifications']);
 
         $siteId = $this->setupSite([
             'buildRuntime' => 'node-22',
@@ -2326,7 +2341,7 @@ final class SitesCustomServerTest extends Scope
 
         $response = $this->getDeploymentDownload($siteId, $deploymentId, 'output');
         $this->assertEquals(200, $response['headers']['status-code']);
-        $this->assertEquals('application/gzip', $response['headers']['content-type']);
+        $this->assertEquals('application/octet-stream', $response['headers']['content-type']);
         $this->assertGreaterThan(0, $response['headers']['content-length']);
         $this->assertGreaterThan(0, \strlen($response['body']));
 
