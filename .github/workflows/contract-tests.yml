@@ -42,7 +42,7 @@ jobs:
           while true; do
             status=$(docker compose exec -T appwrite curl -s -o /dev/null -w "%{http_code}" http://localhost/health || echo 000)
             if [ "$status" -eq 200 ]; then
-              echo "Appwrite is healthy"
+              echo "Appwrite is healthy (status $status)"
               break
             fi
             if [ $elapsed -ge $timeout ]; then
