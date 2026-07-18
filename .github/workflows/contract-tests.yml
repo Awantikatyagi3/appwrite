@@ -1,10 +1,11 @@
+---
 name: "Contract Tests"
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: ["master","main"]
   pull_request:
-    branches: [ "master", "main" ]
+    branches: ["master","main"]
 
 env:
   COMPOSE_FILE: docker-compose.yml:docker-compose.override.yml
@@ -33,17 +34,24 @@ jobs:
 
       - name: Setup Environment and Authentication
         working-directory: ./appwrite
-        env:
-          APPWRITE_MASTER_KEY: ${{ secrets.APPWRITE_MASTER_KEY }}
-        run: docker compose exec -e APPWRITE_MASTER_KEY=${{ secrets.APPWRITE_MASTER_KEY }} appwrite sh tests/contract/setup_env.sh
+        run: |
+          docker compose exec -e APPWRITE_MASTER_KEY=${{ secrets.APPWRITE_MASTER_KEY }} \
+            appwrite sh tests/contract/setup_env.sh
 
       - name: Validate External Examples
         working-directory: ./appwrite
-        run: docker compose -f docker-compose.yml -f docker-compose.specmatic.yml run specmatic-validate
+        run: |
+          docker compose -f docker-compose.yml \
+            -f docker-compose.specmatic.yml \
+            run specmatic-validate
 
       - name: Run Specmatic Contract Tests
         working-directory: ./appwrite
-        run: docker compose -f docker-compose.yml -f docker-compose.specmatic.yml up specmatic --abort-on-container-exit
+        run: |
+          docker compose -f docker-compose.yml \
+            -f docker-compose.specmatic.yml \
+            up specmatic \
+            --abort-on-container-exit
 
       - name: Stop Containers
         if: always()
