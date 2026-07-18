@@ -44,7 +44,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - 'curl -fsS -o /dev/null http://localhost/health || exit 1'
+        - 'curl -fsS -o /dev/null -H "Host: $${_APP_DOMAIN:-localhost}" http://localhost/v1/health'
       interval: 5s
       timeout: 5s
       retries: 20
