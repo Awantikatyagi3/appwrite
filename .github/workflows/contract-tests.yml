@@ -32,27 +32,12 @@ jobs:
           docker compose build
           docker compose up -d
 
-      - name: Wait for Appwrite to be healthy
+      - name: Wait for Appwrite to be healthy (Docker healthcheck)
         working-directory: ./appwrite
         run: |
-          # Wait until the Appwrite health endpoint returns 200
-          timeout=300
-          interval=5
-          elapsed=0
-          while true; do
-            status=$(docker compose exec -T appwrite curl -s -o /dev/null -w "%{http_code}" http://localhost/health || echo 000)
-            if [ "$status" -eq 200 ]; then
-              echo "Appwrite is healthy (status $status)"
-              break
-            fi
-            if [ $elapsed -ge $timeout ]; then
-              echo "Timed out waiting for Appwrite health"
-              exit 1
-            fi
-            echo "Waiting for Appwrite to be healthy... (status $status)"
-            sleep $interval
-            elapsed=$((elapsed+interval))
-          done
+          # Docker will wait until the "appwrite" service reports healthy based on its healthcheck
+          docker compose wait appwrite
+          echo "Appwrite is healthy"
 
       - name: Setup Environment and Authentication
         working-directory: ./appwrite
