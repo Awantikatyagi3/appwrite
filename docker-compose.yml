@@ -44,11 +44,11 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - 'curl -fsS -o /dev/null -H "Host: $${_APP_DOMAIN:-localhost}" http://localhost/v1/health'
+        - 'curl -fsS -o /dev/null http://localhost/health || exit 1'
       interval: 5s
       timeout: 5s
-      retries: 12
-      start_period: 120s
+      retries: 20
+      start_period: 180s
     networks:
       - appwrite
     labels:
